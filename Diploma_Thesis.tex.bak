@@ -1,0 +1,105 @@
+\documentclass[ 12pt, a4paper, twoside, openright ]{memoir}
+\usepackage{xltxtra}
+\usepackage{xgreek}
+\setmainfont[Mapping=tex-text]{GFS Artemisia}
+\usepackage{subfig}
+\usepackage{algorithmic}
+\usepackage{acronym}
+\usepackage{listings}
+\usepackage{amsfonts}
+\usepackage{gr-acrnm}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\usepackage{siunitx}
+\usepackage{latexsym}
+
+
+
+%Use the hyperref package in order to create hyper-references
+%If dvipdfm method is choosen, then the .dvi file must be compiled
+%with the dvipdfm utility
+%\usepackage[dvipdfm, bookmarks=false, linkbordercolor={1 1 1}, colorlinks=false, urlcolor={1 1 1}, urlbordercolor={1 1 1}, citecolor={1 1 1}, citebordercolor={1 1 1}, breaklinks=true pdfborder={0 0 0}]{hyperref}
+\usepackage[xetex, bookmarks=false, colorlinks=true, linkcolor=black, citecolor=black, filecolor=black, urlcolor=black, breaklinks=true pdfborder={0 0 0}]{hyperref}
+
+
+%Memoir package has an internal implementation of the fancyhdr package
+%\usepackage{fancyhdr}
+
+%For error suppressing
+\renewcommand{\rm}{}
+\renewcommand{\sl}{}
+
+%Some definitions
+\newenvironment{dedication}{\newpage\begin{flushright}\null\vskip2in}%
+{\vfill\end{flushright}}
+
+\renewcommand{\abstractnamefont}{\Huge\bfseries}
+
+\renewcommand{\abstracttextfont}{\normalsize}
+
+\renewcommand{\chaptermark}[1]{\markboth{\textsl{\chaptername}\ \thechapter.\ #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{#1}}
+\newcommand{\mypagestyle}{\fancyhf{} \fancyhead{} \fancyfoot{}}
+
+%Definitions for the wbepi (epigraphs) environment
+\makeatletter
+\newcommand{\wb@episource}{}
+\newenvironment{wbepi}[1]{\begin{quote}\renewcommand{\wb@episource}{#1}\itshape}{\par\upshape \raggedleft %---
+\textsc{\wb@episource}\\ \end{quote}}
+\makeatother
+
+\hyphenation{hete-rogeneous επε-κτεί-νουν πρό-τυ-πο προ-τει-νό-με-νες πρα-γμα-τι-κό-τη-τα ε-πε-ξερ-γα-στών κα-θυ-στέ-ρη-ση βελ-τι-στο-ποι-η-μέ-νο αρ-χι-τε-κτο-νι-κή υποτετρα-πλασιάζεται μικρο-επεξεργαστών καταχω-ρητών γραμματο-κιβωτίων χρησιμο-ποιείται προγραμμα-τιστή ελαχιστο-ποίηση προσο-μοιωτής αποτε-λέσματα αποκωδι-κοποίησης εξό-δου παραλλη-λοποίηση μοντελο-ποιούν πρα-γμα-το-ποι-εί-ται πραγματο-ποιήθηκε χρησιμο-ποιήθηκε διανυσματο-ποίησης ευθυγραμμι-σμένες διανυσμα-τικό διαπιστω-θεί διεύθυν-ση αποθηκεύο-νται υποδια-στολής προαναφερ-θείσα δρομολό-γηση συντεταγ-μένων βελτιστο-ποίηση υπολο-γισμών αρχιτε-κτονικές βελτιστο-ποιηθεί πραγμα-τικό επαναχρησι-μοποίησης βελτιστο-ποιήσεις διακλά-δωσης α-πο-θή-κευ-ση εκπό-νηση Αντωνό-πουλο επιστη-μονικές χαρακτη-ρίζεται καθι-στούν επιστημονι-κές χαρακτηρίζε-ται καθι-στούν παρα-μόρφωσης επεξεργα-στή μεταγλωττι-στών εργα-λεία επεξερ-γαστή συναρτή-σεις απαιτή-σεις απεικό-νιση δειγματο-ληψία τοποθε-τούνται συνεργα-σία αποτε-λεί υλοποί-ηση pi-xels παρατη-ρείται συνερ-γασία υλοποί-ηση κατευθύ-νονται αποκωδι-κοποίηση καταχω-ρητής φόρτω-σης επικοινω-νία Εξό-δου εκθε-τικές δεδο-μένων συστή-ματος εφαρμο-γών αντί-στοιχες διανυσμά-των δευτερό-λεπτο διανυσμα-τικούς παραλλη-λισμό ομαδοποι-ώντας παρεμβο-λής τεμαχι-σμού παρουσιά-ζεται τριγωνομε-τρικές χρησιμοποιή-θηκαν παραλλη-λισμό ομαδοποι-ώντας μεταβλη-τών παράλ-ληλη υπολογι-στικοί αποτελεσμα-τικότητα ομαδο-ποιώντας καταχώ-ρητη αντιπραγματι-σμοί ευρυγώ-νιων χρησιμοποιού-νται ξεδιπλώ-ματος πρόβλε-ψης δημιουρ-γή-θηκε εσωτε-ρικών διατίθε-ται χαρακτηρίζο-νται διατυπώνε-ται αφαίρε-σης λαμβάνο-νται πε-ρί-πτω-ση κατα-σκευή επιβάρυν-ση διαθέσι-μων διαθέσι-μους διαθέσι-μα χωρίζο-νται παραλληλι-σμού επεξεργα-στές περιγράφε-ται πραγματοποι-ούνται ετερογε-νή δημιουργού-νται τεχνολο-γίας βιβλιοθή-κης αλγορίθ-μου επεξεργα-στής παράγο-ντας προσφέ-ρει παραμόρφω-ση λανθασμέ-νης πλεονέ-κτημα φω-το-γρα-φία δια-κλα-δώ-σε-ων ε-φαρ-μο-γής δια-θέ-σι-μα ε-ντο-λών υ-πο-λο-γι-σμούς υ-πο-λο-γι-σμού πα-ρα-μόρ-φω-ση ταυ-τό-χρο-να}
+
+\setcounter{tocdepth}{2}
+
+\abstractintoc
+
+%For the nomenclature
+\begin{document}
+
+\frontmatter
+
+%Include the dedication page
+%\include{Dedication/dedication}
+
+%Include the page for the acknowledgements
+%\include{Acknowledgements/acknowledgements}
+
+%\tableofcontents*
+%\newpage
+%\listoftables
+%\newpage
+%\listoffigures
+%\newpage
+%\include{Acronyms/acronyms}
+%Include the greek abstract for the thesis
+%\include{Abstract/abstract}
+%Include the english abstract for the thesis
+%\include{Abstract/abstracten}
+
+
+\mainmatter
+\pagestyle{Ruled}
+
+%\include{Chapter1/chapter1}
+
+\include{Chapter2/chapter2}
+
+%\include{Chapter3/chapter3}
+
+%\include{Chapter4/chapter4}
+
+%\include{Chapter5/chapter5}
+
+%\include{Chapter6/chapter6}
+
+%\include{Chapter7/chapter7}
+
+%\backmatter
+
+%\cleardoublepage
+%\bibliographystyle{plain}
+%\bibliography{Bibliography/ThesisBibliography}
+\nocite{*}
+
+\end{document} 
