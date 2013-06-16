@@ -92,26 +92,8 @@ $x_i = \begin{bmatrix}
 
 \newpage
 
-\indent Η πιο σημαντική βελτιστοποίηση επιτεύχθηκε στο σημείο της αναζήτησης του κοντινότερου cluster στο Βήμα 5. Στην απλή εκδοχή του αλγορίθμου για κάθε data point σαρώνονται όλα τα clusters για να βρεθεί ποιο είναι πιο κοντά. Στην διπλωματική αυτή χρησιμοποιήθηκε ο αλγόριθμος Fast Nearest Neighbour οπού οργανώνει τις αποστάσεις σε ένα δυαδικό δέντρο και μας επιτρέπει να κάνουμε από k αναζητήσεις log(k) για κάθε data point. Αυτό δίνει μία τεράστια επιτάχυνση στο όλο πρόβλημα και σε συνδυασμό με την παραλληλοποίηση του Βήματος 4 μας επέτρεψε να τρέχουμε μεγάλα πειράματα σε εύλογο χρονικό διάστημα. Οι επιταχύνσεις που επιτεύχθηκαν με την χρήση του FastNN φαίνεται στο Σχήμα~\ref{fig:fastnn} και της παραλληλοποίησης του Βήματος 4 στο Σχήμα~\ref{fig:ompiter}
+\indent Η πιο σημαντική βελτιστοποίηση επιτεύχθηκε στο σημείο της αναζήτησης του κοντινότερου cluster στο Βήμα 5. Στην απλή εκδοχή του αλγορίθμου για κάθε data point σαρώνονται όλα τα clusters για να βρεθεί πιο είναι πιο κοντά. 
 
-\begin{figure}[ht!]
-  \centering
-  \includegraphics[width=0.5\textwidth]{chapter3/kmeans.jpg}
-  \caption{kmeans με $k=2,d=2,n=100,MSE=284.671$}
-  \label{fig:fastnn}
-\end{figure}
+\indent Η δεύτερη βελτιστοποίηση που έγινε είναι να παραλληλοποιηθεί το for-loop στο βήμα 4. Οπού και μας έδωσε μια γραμμική επιτάχυνση για 1,2,4,8,12,24 νήματα.
 
-\begin{figure}[ht!]
-  \centering
-  \includegraphics[width=0.5\textwidth]{chapter3/kmeans.jpg}
-  \caption{kmeans με $k=2,d=2,n=100,MSE=284.671$}
-  \label{fig:ompiter}
-\end{figure}
-
-\newpage
-\indent Για τα πειράματα της διπλωματικής χρησιμοποιήθηκε ένας HP Blade Server 
-\begin{itemize}
-    \item OS Microsoft Windows Server 2008 R2 Datacenter
-    \item CPU 2xIntel Xeon E5-2600 @ 2.30Ghz οπού παρείχαν συνολικά 12 Threads + 12 με HyperThreading 
-    \item RAM 32GB. Επίσης το λειτουργικό σύστημα 
-\end{itemize}
+ 
