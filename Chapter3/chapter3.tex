@@ -58,22 +58,22 @@ $x_i = \begin{bmatrix}
 
 \begin{algorithm}[H]
 \begin{algorithmic}[1]
-\STATE{Choose initial centers for clusters K;} \label{alg:kmeans:s1}
-\WHILE{the clusters are changing}
-    \STATE{Reassign the data points and set $Ktemp=0$;}
-    \FORALL{Data points n} \label{alg:kmeans:s4}
-        \STATE{Assign data point $n_i$ to the cluster $k_j$ whose center is closest;} \label{alg:kmeans:s5}
-        \STATE{$Ktemp_j+=n_i$}
-    \ENDFOR
-    \STATE{Update the cluster centers;}
-    \FOR{j:=1 to k step 1}
-        \STATE{$\mathbf{r_j}$ = number of points in $Ktemp_j$;}
-        \STATE{$\mathbf{K_j} = \frac{Ktemp_j}{r_j}$;}
-    \ENDFOR
-\ENDWHILE
+\State{Choose initial centers for clusters K;} \label{alg:kmeans:s1}
+\While{the clusters are changing}
+    \State{Reassign the data points and set $Ktemp=0$;}
+    \ForAll{Data points n} \label{alg:kmeans:s4}
+        \State{Assign data point $n_i$ to the cluster $k_j$ whose center is closest;} \label{alg:kmeans:s5}
+        \State{$Ktemp_j+=n_i$}
+    \EndFor
+    \State{Update the cluster centers;}
+    \For{j:=1 to k step 1}
+        \State{$\mathbf{r_j}$ = number of points in $Ktemp_j$;}
+        \State{$\mathbf{K_j} = \frac{Ktemp_j}{r_j}$;}
+    \EndFor
+\EndWhile
+\end{algorithmic}
 \caption{K-Means pseudo code}
 \label{alg:kmeans}
-\end{algorithmic}
 \end{algorithm}
 
 \newpage

@@ -1,0 +1,49 @@
+﻿\chapter{VQ H.264}
+\label{chapter:chap5}
+
+\section{Εισαγωγή}
+\label{section:sect51}
+
+\indent Στο τελευταίο κομμάτι αυτής της διπλωματικής έγινε η ενσωμάτωση του VQ στον H.264 έτσι ώστε να μπορούμε να κάνουμε encoding και decoding με βάση τα codebooks. Το να αντικατασταθεί όλος ο μηχανισμός κβαντοποίησης-μετασχηματισμού του H.264 είναι αρκετά περίπλοκο και η ιδέα εγκαταλείφθηκε γρήγορα. Αντί για αυτό επιλέχθηκε να γίνει μια άλλη τροποποίηση η οποία αφήνει τον H.264 να κάνει όλες τις λειτουργίες του αλλά κάπου στο ενδιάμεσο παρεμβαίνουμε για να εισάγουμε τα δικά μας residuals.
+
+\section{Encoding}
+\label{section:sect52}
+
+\indent Αφού γίνει το Prediction o H.264 συνεχίζει με μετασχηματισμό και κβαντοποίηση τον residuals. Έπειτα κάνει αντίστροφο μετασχηματισμό και αντίστροφη κβαντοποίηση (την διαδικασία που κάνει ο decoder) για να μπορεί να ανακατασκευάσει τα pixels με τον θόρυβο που εισήχθηκε από την κβαντοποίηση. Αυτό είναι αναγκαίο διότι ο decoder γνωρίζει μόνο τα χαλασμένα residuals αρά στον encoder θα πρέπει να παίρνουμε αποφάσεις μόνο με τα χαλασμένα residuals. Με τον όρο αποφάσεις εννοώ ότι η επιλογή του καλύτερου Motion Vector στον encoder θα γίνει με βάσει τα ανακατασκευασμένα pixel. Επομένως κάπου στον encoder υπάρχει ένα σημείο που ανακατασκευάζει τα pixels, το οποίο βρίσκετε στο Σχήμα~\ref{fig:h264} στο σημείο μεταξύ Scaling \& Inv. Transform και Deblocking Filter. Επίσης αυτό το Σχήμα μας κάνει φανερό ότι τα reconstructed residuals χρησιμοποιούνται για να γίνετε το Motion Estimation.
+
+\indent Η συνάρτηση που ο Η.264 κάνει την πράξη $ Pixel_{reconstructed_i} = Residual_{reconstructed_i} + Pixel_{reference_i} $ βρίσκεται στο αρχείο blk\_prediction.c και ονομάζεται sample\_reconstruction. Δέχεται σαν ορίσματα έναν pointer στην ανακατασκευασμένη εικόνα, το μέγεθος του block καθώς και την θέση του στην εικόνα, τα Reference Pixels και τα Reconstructed Residuals.
+
+\indent Η τακτική που ακολουθήσαμε ήταν να κωδικοποιούμε το βίντεο με QP=0 (καθόλου απώλεια στην κβαντοποίηση) άρα τα Reconstructed Residuals = Original Residuals. Αρά στην ουσία πετύχαμε τον στόχο της αφαίρεσης του μηχανισμού μετασχηματισμού-κβαντοποίησης. Μετά από αυτό το βήμα τροποποιήθηκε η συνάρτηση sample\_reconstruction έτσι ώστε προτού την πράξη ανακατασκευής των pixels να εισάγονται τα residuals του VQ. Αυτό επιτεύχθηκε πολύ απλά με τον Αλγόριθμο~\ref{alg:quantmb} όπου για την αναζήτηση του minimum distance χρησιμοποιήθηκε και εδώ ο αλγόριθμος FastNN για να επιταχύνει την διαδικασία του encoding. Μετά από αυτό το βήμα το καρέ ανακατασκευάζετε με βάση τα $VQ_{residuals}$, επομένως όλες οι αποφάσεις παίρνονται με βάση αυτά.
+
+\indent Το επόμενο που έγινε είναι να αποθηκεύονται τα τελικά $VQ_{indices}$ σε ένα αρχείο. Όπως αναφέρθηκε για κάθε macroblock ο H.264 δοκιμάζει όλα τα επιτρεπόμενα modes μέχρι να βρεθεί το καλύτερο, αυτό σημαίνει πως η συνάρτηση sample\_reconstruction θα κληθεί όσες φόρες είναι και το πλήθος των modes. Επομένως πρέπει να κρατάμε τα προσωρινά $VQ_{indices}$ που γράφει η quantize\_mb και κάθε φόρα που βρίσκουμε ότι ένα mode είναι καλύτερο από το προηγούμενο να τα αντιγράφουμε σε ένα global πίνακα που κρατάει τα καλύτερα VQ indices για κάθε macroblock.
+
+\indent Αφού τελειώσει η διαδικασία αυτή για κάθε macroblock γράφουμε τα $VQ_{indices}$ σε ένα αρχείο. Σε αυτήν την διπλωματική τα VQ indices που γράφονται για κάθε macroblock είναι $\frac{16*16}{4*4}=16$ όπου 16*16 η διάσταση του macroblock και 4*4 η διάσταση του codebook. Επομένως γράφονται $2*16 = 32bytes$ ανά macroblock, το 2 bytes προκύπτει επειδή τα $VQ_{indices}\in[0,65536]$.
+
+\begin{algorithm}[H]
+
+\begin{algorithmic}[1]
+\Function{quantize\_mb}{residuals,width,height,x,y,plane,mode}
+\State{Load codebook for mode(Intra,Inter) and plane(Y,UV);}
+\ForAll{subblocks with dimension dxd in block[x,y]}
+    \State{$vq_i = $ codebook index with minimum distance from subblock;}
+    \State{Replace dxd residuals with codebook[$vq_i$] data;}
+    \State{Store $vq_i$ for subblock;}
+\EndFor
+\EndFunction
+\caption{Block VQ Algorithm}
+\label{alg:quantmb}
+\end{algorithmic}
+\end{algorithm}
+
+\indent Για να παραμετροποιείται o JM Η.264 προσθέσαμε τις παρακάτω επιλογές στο configuration file.
+
+\begin{itemize}
+    \item VQcodebook[YI,YB,YP,UVI,UVB,UVP] οπού δίνονται τα ονόματα των αρχείων των codebook.
+    \item VQindices οπού δίνετε το αρχείο των $VQ_{indices}$.
+    \item VQdim οπού δίνετε η διάσταση των codebook. Αν είναι 0 το VQ απενεργοποιείται.
+    \item VQcblen οπού δίνετε το μήκος των codebook.
+    \item Για να γίνει VQ πρέπει όλα τα QP να είναι 0.
+\end{itemize}
+
+\section{Decoding}
+\label{section:sect53}
