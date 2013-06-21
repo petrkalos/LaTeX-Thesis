@@ -7,14 +7,15 @@
 \indent Σε αυτό το κεφάλαιο θα παρουσιαστούν και θα αναλυθούν τα αποτελέσματα του VQ H.264, επίσης θα γίνει σύγκριση με τις επιδόσεις του JM H.264. Επίσης θα δειχθεί ότι με την χρήση VQ μπορούμε να βελτιώσουμε την πολυπλοκότητα του decoder σε σχέση με αυτή του JM H.264.
 
 \section{Encoding με VQ H.264}
+\label{section:sect62}
 
-\indent Για τις δοκιμές χρησιμοποιήθηκαν 5 βίντεο που δεν είχαν συμπεριληφθεί στο training set και τα στυγμιοτυπα τους φαίνονται στο Σχήμα~\ref{fig:testvid}. Η ποιότητα που αυτά τα βίντεο κωδικοποιήθηκαν φαίνεται στο Σχήμα~\ref{fig:testpsnr}
+\indent Για τις δοκιμές χρησιμοποιήθηκαν 5 βίντεο που δεν είχαν συμπεριληφθεί στο training set και τα στιγμιότυπα τους φαίνονται στο Σχήμα~\ref{fig:testvid}. To PSNR που ο VQ H.264 στα test video φαίνεται στο Σχήμα~\ref{table:testpsnr}.
 
 \begin{table}[h!]
     \begin{center}
         \begin{tabular}{| l | l | l | l |}
         \hline
-        Test Video & PSNR I (Y/U/V)dB  & PSNR P (Y/U/V)dB  & PSNR B (Y/U/V)dB   & Avg.Data/Frame    \\ \hline
+        Test Video & PSNR I (Y/U/V)dB  & PSNR P (Y/U/V)dB  & PSNR B (Y/U/V)dB       \\ \hline
         test1      & 35.15/39.72/39.67 & 41.16/43.91/43.87 & 43.00/45.14/45.22      \\ \hline
         test2      & 35.51/41.10/42.83 & 38.87/41.53/43.28 & 40.38/43.01/44.71      \\ \hline
         test3      & 30.70/39.86/41.00 & 36.68/42.64/43.76 & 38.00/43.74/44.90      \\ \hline
@@ -24,8 +25,8 @@
         \end{tabular}
     \end{center}
 
-    \caption{codebooks}
-    \label{table:trainingset}
+    \caption{PSNR των Test videos με κωδικοποίηση στον VQ H.264}
+    \label{table:testpsnr}
 \end{table}
 
 \begin{figure}[p]
@@ -41,4 +42,49 @@
 \label{fig:testvid}
 \end{figure}
 
+\section{Encoding με JM H.264}
+\label{section:sect62}
 
+\indent Για να είμαστε σε θέση να συγκρίνουμε τα αποτελέσματα των δύο encoder θα πρέπει να συμπιέσουμε τα ίδια βίντεο με τον JM H.264 με το ίδιο configuration και προσπαθώντας να πετύχουμε τα ίδια PSNR που πέτυχε και ο VQ H.264. Αυτό επιτεύχθηκε δοκιμάζοντας διάφορα QP για τα καρέ I,P,B. Επειδή στον VQ H.264 παρατηρείται ότι το U,V αποδίδει πολύ καλύτερα από το Υ σε κάποια βίντεο χρειάστηκε να υπολογιστεί ο βεβαρημένος μέσος όρος $avg = 0.66*PSNRY+0.16*PSNRU+0.16*PSNRV$ έτσι ώστε να ισχύει $avg_{vq}=avg_{jm}$. Τα αποτελέσματα φαίνονται στον Πίνακα~\ref{table:jm264}.
+Η ποσοστιαία διαφορά ως προς τον JM φαίνεται στον Πίνακα~\ref{table:jmvqdiff} και θα την χαρακτήριζα πολύ μικρή έτσι ώστε να έχουμε έγκυρη σύγκριση.
+
+\begin{table}[h!]
+    \begin{center}
+        \begin{tabular}{| l | l | l | l |}
+        \hline
+        Test Video & PSNR I (Y/U/V)dB  & PSNR P (Y/U/V)dB  & PSNR B (Y/U/V)dB       \\ \hline
+        test1      & 36.31/38.88/38.90 & 42.01/43.95/44.54 & 43.50/44.75/45.49      \\ \hline
+        test2      & 37.31/38.43/40.00 & 40.50/41.14/42.24 & 40.50/41.45/42.54      \\ \hline
+        test3      & 33.94/37.24/37.85 & 38.64/40.75/41.45 & 38.45/40.51/41.25      \\ \hline
+        test4      & 45.18/46.83/47.86 & 45.75/47.13/48.18 & 46.10/47.29/48.21      \\ \hline
+        test5      & 39.20/46.76/47.34 & 43.94/47.66/48.28 & 45.14/49.29/49.76      \\ \hline
+        \hline
+        \end{tabular}
+    \end{center}
+
+    \caption{PSNR των Test videos με κωδικοποίηση στον JM H.264}
+    \label{table:jm264}
+\end{table}
+
+\begin{table}[h!]
+    \begin{center}
+        \begin{tabular}{| l | l | l | l |}
+        \hline
+        Test Video & \% Diff I  & \% Diff P & \% Diff B   \\ \hline
+        test1      & 1,40	    & -1,40	    & -0,93       \\ \hline
+        test2      & 0,83	    & -5,11	    & -4,23       \\ \hline
+        test3      & 3,53	    & -5,21	    & -5,49       \\ \hline
+        test4      & 1,35	    & -0,87	    & -0,18       \\ \hline
+        test5      & 1,69	    & -5,38	    & -2,76       \\ \hline
+        \hline
+        \end{tabular}
+    \end{center}
+
+    \caption{Διαφορές του PSNR JM-VQ. Στα θετικά ο JM είναι καλύτερος από τον VQ ενώ στα αρνητικά το ανάποδο.}
+    \label{table:jmvqdiff}
+\end{table}
+
+\section{VQ H.264 vs JM H.264}
+\label{section:sect63}
+
+\indent Όλα τα βίντεο κωδικοποιήθηκαν με ρυθμό ανανέωσης 30fps και με το GOP που χρησιμοποιήθηκε είχαμε 2 καρέ Ι, 20 καρέ Β, 8 καρέ P. Η ανάλυση των βίντεο είναι τα test1,2,3,5 832x40 και το test4 1920x1080 αρά τα $VQ_{indices}$ χρειάζονται για να αποθηκευτούν
