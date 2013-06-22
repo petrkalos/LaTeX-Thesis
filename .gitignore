@@ -1,6 +1,6 @@
 *.acn
 *.tex.bak
-*.synctex
+*.synctex*
 *.bak
 *.acr
 *.alg
