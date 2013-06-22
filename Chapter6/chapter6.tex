@@ -38,7 +38,7 @@
     \includegraphics[height=4.0cm]{chapter6/test4.png}\\
     \includegraphics[height=4.0cm]{chapter6/test5.png}
 \end{tabular}
-\caption{Βίντεο που δοκιμάστηκαν να γίνουν encoding με τον VQ H.264.}
+\caption{Βίντεο που δοκιμάστηκαν να γίνουν encoding με τον VQ H.264. \cite{misc:testvid}}
 \label{fig:testvid}
 \end{figure}
 
@@ -86,14 +86,30 @@
 \end{table}
 
 \newpage
-\section{VQ H.264 vs JM H.264}
+\section{Αποτελέσματα των VQ H.264,JM H.264}
 \label{section:sect63}
 
-\indent Για να γίνει η σύγκριση θα υπολογιστούν τα συνολικά bits που ο JM H.264 χρειάστηκε για να αποθηκεύσει τους κβαντοποιημένους συντελεστές του μετασχηματισμού, αυτή η πληροφορία μας παρέχεται απευθείας από την έξοδο του encoder. Αυτό γίνετε γιατί στην ουσία τα $VQ_{indices}$ αντιστοιχούν μόνο στην πληροφορία που μας δίνουν τα residuals, όπως και οι συντελεστές του μετασχηματισμού. Αφού αυτά βρέθηκαν υπολογίστηκε το πλήθος $len(vector_{mode})$ των vectors για κάθε βίντεο και κάθε mode (Intra,Inter) και από το πλήθος αυτών αφαιρούνται 16 vectors για κάθε macroblock που χαρακτηρίζεται από τον encoder σαν skipped. Skipped είναι ένα macroblock για το οποίο ο encoder δε γράφει συντελεστές γιατί είναι όλοι μηδέν. Στο επόμενο βήμα πολλαπλασιάζουμε την εντροπία από τους Πίνακες~\ref{fig:conentropy},~\ref{fig:trainingset} με την διάσταση του VQ για να βρούμε πόσα bits χρειάζονται για κάθε block dxd. Τέλος πολλαπλασιάζουμε τα bits που χρειάζονται ανά block και έχουμε το μέγεθος των $VQ_{indices}$ μετά από συμπίεση. Η αποδόσεις φαίνονται στο Σχήμα~\ref{fig:compare1}.
+\indent Για να γίνει η σύγκριση θα υπολογιστούν τα συνολικά bits που ο JM H.264 χρειάστηκε για να αποθηκεύσει τους κβαντοποιημένους συντελεστές του μετασχηματισμού, αυτή η πληροφορία μας παρέχεται απευθείας από την έξοδο του encoder. Αυτό γίνετε γιατί στην ουσία τα $VQ_{indices}$ αντιστοιχούν μόνο στην πληροφορία που μας δίνουν τα residuals, όπως και οι συντελεστές του μετασχηματισμού. Αφού αυτά βρέθηκαν υπολογίστηκε το πλήθος $len(vector_{mode})$ των vectors για κάθε βίντεο και κάθε mode (Intra,Inter) και από το πλήθος αυτών αφαιρούνται 16 vectors για κάθε macroblock που χαρακτηρίζεται από τον encoder σαν skipped. Skipped είναι ένα macroblock για το οποίο ο encoder δε γράφει συντελεστές γιατί είναι όλοι μηδέν. Στο επόμενο βήμα πολλαπλασιάζουμε την εντροπία του Πίνακα~\ref{table:conentropy} και του Σχήματος~\ref{fig:trainingset} με την διάσταση του VQ για να βρούμε πόσα bits χρειάζονται για κάθε block dxd. Τέλος πολλαπλασιάζουμε τα bits που χρειάζονται ανά block και έχουμε το μέγεθος των $VQ_{indices}$ μετά από συμπίεση. Η αποδόσεις φαίνονται στο Σχήμα~\ref{fig:compare1}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{chapter6/compare1.jpg}
-    \caption{Σύγκριση του JM H.264 και VQ H.264 με context entropy και χωρίς context}
+    \caption{Σύγκριση της απόδοσης PSNR του JM H.264 και VQ H.264 με context entropy και χωρίς context.}
     \label{fig:compare1}
+\end{figure}
+
+\indent Εκτός από την σύγκριση στο PSNR έγινε προσπάθεια να συγκριθούν και οι χρόνοι κωδικοποίησης και αποκωδικοποίησης. Όπως είπαμε ο VQ Η.264 κάνει όλη την άχρηστη για αυτόν δουλειά του μετασχηματισμού,κβαντοποίησης,αντίστροφου μετασχηματισμού,αντίστροφης κβαντοποίησης επομένως χρησιμοποιήθηκε το Intel VTune για να βρεθεί ο χρόνος αυτόν των συναρτήσεων και να αφαιρεθούν από τον συνολικό. Έτσι είχαμε μια καλή προσέγγιση των επιδόσεων του VQ H.264 και η σύγκρισή με τον JM H.264 φαίνεται στο Σχήμα~\ref{fig:compare2} και στο Σχήμα~\ref{fig:compare3}.
+
+ \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{chapter6/compare2.jpg}
+    \caption{Σύγκριση του χρόνου εκτέλεσης των encoder JM H.264 και VQ H.264.}
+    \label{fig:compare2}
+\end{figure}
+
+ \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{chapter6/compare3.jpg}
+    \caption{Σύγκριση του χρόνου εκτέλεσης των decoder JM H.264 και VQ H.264.}
+    \label{fig:compare3}
 \end{figure}

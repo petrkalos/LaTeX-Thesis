@@ -20,7 +20,6 @@
 \indent Αφού τελειώσει η διαδικασία αυτή για κάθε macroblock γράφουμε τα $VQ_{indices}$ σε ένα αρχείο. Σε αυτήν την διπλωματική τα VQ indices που γράφονται για κάθε macroblock είναι $\frac{16*16}{4*4}=16$ όπου 16*16 η διάσταση του macroblock και 4*4 η διάσταση του codebook. Επομένως γράφονται $2*16 = 32bytes$ ανά macroblock, το 2 bytes προκύπτει επειδή τα $VQ_{indices}\in[0,65536]$.
 
 \begin{algorithm}[H]
-
 \begin{algorithmic}[1]
 \Function{quantize\_mb}{residuals,width,height,x,y,plane,mode}
 \State{Load codebook for mode(Intra,Inter) and plane(Y,UV);}
@@ -30,20 +29,49 @@
     \State{Store $vq_i$ for subblock;}
 \EndFor
 \EndFunction
+\end{algorithmic}
 \caption{Block VQ Algorithm}
 \label{alg:quantmb}
-\end{algorithmic}
 \end{algorithm}
 
-\indent Για να παραμετροποιείται o JM Η.264 προσθέσαμε τις παρακάτω επιλογές στο configuration file.
+\indent Για να παραμετροποιείται o JM Η.264 encoder προστέθηκαν οι παρακάτω επιλογές στο configuration file.
 
 \begin{itemize}
-    \item VQcodebook[YI,YB,YP,UVI,UVB,UVP] οπού δίνονται τα ονόματα των αρχείων των codebook.
+    \item VQcodebook[YI,YB,YP,UVI,UVB,UVP] οπού δίνονται τα ονόματα των αρχείων των codebooks.
     \item VQindices οπού δίνετε το αρχείο των $VQ_{indices}$.
-    \item VQdim οπού δίνετε η διάσταση των codebook. Αν είναι 0 το VQ απενεργοποιείται.
-    \item VQcblen οπού δίνετε το μήκος των codebook.
+    \item VQdim οπού δίνετε η διάσταση των codebooks. Αν είναι 0 το VQ απενεργοποιείται.
+    \item VQcblen οπού δίνετε το μήκος των codebooks.
     \item Για να γίνει VQ πρέπει όλα τα QP να είναι 0.
 \end{itemize}
 
+\indent Ο VQ H.264 παράγει και ένα αρχείο ίδιο με αυτό του JM H.264 με κατάληξη .264 που περιέχει κατά κύριο λόγο τα Motion Vectors και κάποια headers. Επίσης εμπεριέχονται και τα συμπιεσμένα residuals αλλά αυτά είναι άχρηστα για τον decoder αφού διαβάζονται από τα codebooks.
+
 \section{Decoding}
 \label{section:sect53}
+
+\indent Στον decoder όπως περιμένει κανείς τα πράγματα είναι πιο απλά.Αφού αφήσουμε τον decoder να κάνει την διαδικασία αντιστροφής κβαντοποίησης και μετασχηματισμού, στο ίδιο ακριβώς σημείο με τον encoder παρεμβάλλουμε την συνάρτηση ivq\_macroblock. Η συνάρτηση αυτή αντιστοιχίζει 16 $VQ_{indices}$ που διαβάζει από το αρχείο για κάθε ένα από τα 16 subblocks του macroblock με 16 $VQ_{vectors}$
+Αλγόριθμος~\ref{alg:iquantmb}.Τελικά ο decoder παίρνει την κύρια πληροφορία που είναι τα residuals από τα $VQ_{indices}$ και τα headers,motion vector από το αρχείο .264.
+
+\begin{algorithm}
+\begin{algorithmic}[1]
+\Function{quantize\_mb}{residuals,width,height,x,y,plane,mode}
+\State{Load codebook for mode(Intra,Inter) and plane(Y,UV);}
+\ForAll{subblocks with dimension dxd in block[x,y]}
+    \State{$vq_i = $ read $VQ_{index}$ from file for this position[x,y];}
+    \State{Replace dxd residuals with codebook[$vq_i$] data;}
+\EndFor
+\EndFunction
+\end{algorithmic}
+\caption{Block inverse VQ Algorithm}
+\label{alg:iquantmb}
+\end{algorithm}
+
+\indent Για να παραμετροποιείται o JM Ηs.264 decoder προστέθηκαν οι παρακάτω επιλογές στο configuration file.
+
+\begin{itemize}
+    \item VQcodebook[YI,YB,YP,UVI,UVB,UVP] οπού δίνονται τα ονόματα των αρχείων των codebooks.
+    \item VQindices οπού δίνετε το αρχείο των $VQ_{indices}$.
+    \item VQdim οπού δίνετε η διάσταση των codebooks. Αν είναι 0 το VQ απενεργοποιείται.
+    \item VQcblen οπού δίνετε το μήκος των codebooks.
+    \item Για να γίνει VQ πρέπει όλα τα QP να είναι 0.
+\end{itemize} 

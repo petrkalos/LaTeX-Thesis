@@ -7,13 +7,14 @@
 \usepackage{acronym}
 \usepackage{listings}
 \usepackage{amsfonts}
-\usepackage{gr-acrnm}
 \usepackage{a4wide}
 \usepackage{amsmath}
 \usepackage{siunitx}
 \usepackage{alltt}
 \usepackage{latexsym}
 \usepackage{float}
+\usepackage{url}
+\usepackage{pdfpages}
 
 \setmainfont[Mapping=tex-text]{GFS Artemisia}
 
@@ -57,25 +58,27 @@
 %For the nomenclature
 \begin{document}
 
+\includepdf[pages=-]{Frontcover/frontcover.pdf}
+
 \frontmatter
 
 %Include the dedication page
-%\include{Dedication/dedication}
+\include{Dedication/dedication}
 
 %Include the page for the acknowledgements
-%\include{Acknowledgements/acknowledgements}
+\include{Acknowledgements/acknowledgements}
 
-%\tableofcontents*
-%\newpage
-%\listoftables
-%\newpage
-%\listoffigures
-%\newpage
+\tableofcontents*
+\newpage
+\listoftables
+\newpage
+\listoffigures
+\newpage
 %\include{Acronyms/acronyms}
 %Include the greek abstract for the thesis
-%\include{Abstract/abstract}
+\include{Abstract/abstract}
 %Include the english abstract for the thesis
-%\include{Abstract/abstracten}
+\include{Abstract/abstracten}
 
 
 \mainmatter
@@ -93,13 +96,13 @@
 
 \include{Chapter6/chapter6}
 
-%\include{Chapter7/chapter7}
+\include{Chapter7/chapter7}
 
-%\backmatter
+\backmatter
 
-%\cleardoublepage
-%\bibliographystyle{plain}
-%\bibliography{Bibliography/ThesisBibliography}
+\cleardoublepage
+\bibliographystyle{plain}
+\bibliography{Bibliography/ThesisBibliography}
 \nocite{*}
 
 \end{document} 

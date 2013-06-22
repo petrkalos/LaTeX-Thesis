@@ -19,8 +19,7 @@
 
 \indent Αφού τελειώσει η διαδικασία αυτή για κάθε macroblock γράφουμε τα $VQ_{indices}$ σε ένα αρχείο. Σε αυτήν την διπλωματική τα VQ indices που γράφονται για κάθε macroblock είναι $\frac{16*16}{4*4}=16$ όπου 16*16 η διάσταση του macroblock και 4*4 η διάσταση του codebook. Επομένως γράφονται $2*16 = 32bytes$ ανά macroblock, το 2 bytes προκύπτει επειδή τα $VQ_{indices}\in[0,65536]$.
 
-\begin{algorithm}[H]
-
+\begin{algorithm}[h]
 \begin{algorithmic}[1]
 \Function{quantize\_mb}{residuals,width,height,x,y,plane,mode}
 \State{Load codebook for mode(Intra,Inter) and plane(Y,UV);}
@@ -53,7 +52,7 @@
 \indent Στον decoder όπως περιμένει κανείς τα πράγματα είναι πιο απλά.Αφού αφήσουμε τον decoder να κάνει την διαδικασία αντιστροφής κβαντοποίησης και μετασχηματισμού, στο ίδιο ακριβώς σημείο με τον encoder παρεμβάλλουμε την συνάρτηση ivq\_macroblock. Η συνάρτηση αυτή αντιστοιχίζει 16 $VQ_{indices}$ που διαβάζει από το αρχείο για κάθε ένα από τα 16 subblocks του macroblock με 16 $VQ_{vectors}$
 Αλγόριθμος~\ref{alg:iquantmb}.Τελικά ο decoder παίρνει την κύρια πληροφορία που είναι τα residuals από τα $VQ_{indices}$ και τα headers,motion vector από το αρχείο .264.
 
-\begin{algorithm}
+\begin{algorithm}[h]
 \begin{algorithmic}[1]
 \Function{quantize\_mb}{residuals,width,height,x,y,plane,mode}
 \State{Load codebook for mode(Intra,Inter) and plane(Y,UV);}
@@ -75,4 +74,4 @@
     \item VQdim οπού δίνετε η διάσταση των codebooks. Αν είναι 0 το VQ απενεργοποιείται.
     \item VQcblen οπού δίνετε το μήκος των codebooks.
     \item Για να γίνει VQ πρέπει όλα τα QP να είναι 0.
-\end{itemize}
+\end{itemize} 

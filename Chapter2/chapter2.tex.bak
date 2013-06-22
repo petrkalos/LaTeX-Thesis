@@ -18,7 +18,7 @@
 \begin{figure}[H]
     \centering
         \includegraphics[totalheight=0.87\textheight,width=0.7\textwidth]{chapter2/yuv.jpg}
-    \caption{Στην πρώτη εικόνα φαίνεται ένα καρέ με όλες τις συνιστώσες ενώ παρακάτω ξεχωριστά το YUV για το ίδιο καρέ.}
+    \caption{Στην πρώτη εικόνα φαίνεται ένα καρέ με όλες τις συνιστώσες ενώ παρακάτω ξεχωριστά το YUV για το ίδιο καρέ \cite{wiki:yuv}.}
     \label{fig:yuv}
 \end{figure}
 
@@ -182,13 +182,12 @@ $
 
 \indent Ο μέσος όρος του PSNR όλων των καρέ μας δίνει την ποιότητα του βίντεο.
 
-\newpage
 \section{Δομή του Η.264}
 \label{section:sect28}
 
 \indent Παρακάτω βλέπουμε την δομή του H.264 encoder Σχήμα~\ref{fig:h264}. Το σημείο με το γκρι είναι το κομμάτι του decoder. Κάθε encoder υλοποιεί στο εσωτερικό του και έναν decoder αλλά σε αυτή την διπλωματική δεν θα εξηγήσουμε κάτι παραπάνω γιατί δεν βοηθάει στην κατανόηση της.
 
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.7\textwidth]{chapter2/h264.jpg}
     \caption{H.264 encoder structure}

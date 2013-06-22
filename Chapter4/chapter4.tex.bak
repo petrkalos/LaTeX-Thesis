@@ -35,7 +35,7 @@
     \includegraphics[height=4.0cm]{chapter4/frames/src21.png}
     \includegraphics[height=4.0cm]{chapter4/frames/src22.png}
 \end{tabular}
-\caption{Training βίντεο.}
+\caption{Training βίντεο. \cite{misc:trset}}
 \label{fig:trainingset}
 \end{figure}
 
@@ -46,7 +46,7 @@
 
 \indent Η εξαγωγή των residuals από τον H.264 έγινε από τον decoder και όχι από τον encoder. Αυτή η επιλογή έγινε γιατί ο κώδικας του encoder είναι πιο περίπλοκος απο αυτόν του decoder. Επίσης αναφέρθηκε στο Κεφάλαιο~\ref{chapter:chap2} ότι ο encoder κάνει δοκιμές για να βρει το καλύτερο Intra Prediction Mode αν τα καρέ είναι I,P,B είναι ψάχνει να βρει σε προηγούμενα/επομένα καρέ το καλύτερο match ώστε να βγάλει το Motion Vector. Η παραπάνω διαδικασία δυσκόλεψε τον εντοπισμό του σημείου που βρίσκονται τα residuals του καλύτερου mode.
 
-\indent Στον decoder η διαδικασία ήταν αρκετά απλή. Απλά έπρεπε να βρεθεί το σημείο που ο decoder αποκωδικοποιεί τα macroblocks, τα residuals/macroblock σε αυτό το σημείο ήταν εύκολα προσβάσιμα. Στην συνέχεια το macroblock διάστασης 16x16 με τα residuals χωρίζονταν σε block διάστασης dxd και γράφονταν στο αρχείο όπως φαίνεται στο Σχήμα~\ref{fig:storeres}. Το επόμενο που έγινε είναι να μπορεί να χωρίζει τα vectors σε I,P,B και να τα γράφει σε ξεχωριστά αρχεία καθώς επίσης και να ξεχωρίζει τα Y,UV. Ακόμα ένα στοιχείο που προστέθηκε είναι να υπάρχει η δυνατότητα να εξαχθεί ολόκληρο καρέ διάστασης όσο το βίντεο εισόδου. Τέλος το configuration file του JM H.264 τροποποιήθηκε έτσι ώστε να μπορούμε να δώσουμε τις παρακάτω επιλογές.
+\indent Στον decoder η διαδικασία ήταν αρκετά απλή. Απλά έπρεπε να βρεθεί το σημείο που ο decoder αποκωδικοποιεί τα macroblocks, τα residuals/macroblock σε αυτό το σημείο ήταν εύκολα προσβάσιμα. Στην συνέχεια το macroblock διάστασης 16x16 με τα residuals χωρίζονταν σε block διάστασης dxd και γράφονταν στο αρχείο. Το επόμενο που έγινε είναι να μπορεί να χωρίζει τα vectors σε I,P,B και να τα γράφει σε ξεχωριστά αρχεία καθώς επίσης και να ξεχωρίζει τα Y,UV. Ακόμα ένα στοιχείο που προστέθηκε είναι να υπάρχει η δυνατότητα να εξαχθεί ολόκληρο καρέ διάστασης όσο το βίντεο εισόδου. Τέλος το configuration file του JM H.264 τροποποιήθηκε έτσι ώστε να μπορούμε να δώσουμε τις παρακάτω επιλογές.
 
 \begin{itemize}
     \item ResidualsFileY το αρχείο εξόδου των residuals του Υ.
@@ -84,14 +84,14 @@
         \end{tabular}
     \end{center}
 
-    \caption{codebooks}
+    \caption{Πληροφορίες για τα codebooks.}
     \label{table:trainingset}
 \end{table}
 
 \section{Εντροπία υπό συνθήκη}
 \label{section:sect45}
 
-\indent Είναι γνωστό από την θεωρία Θεώρημα 2.6.5 [Cover] ότι αν έχουμε δύο τυχαίες μεταβλητές Χ,Υ τότε η πληροφορία που μα δίνει η Υ μπορεί μόνο να μειώσει την εντροπία της Χ, ισχύει δηλαδή πως $ H(X|Y=y_i) \leq H(X)$ με την ισότητα να ισχύει μόνο όταν Χ,Υ είναι ανεξάρτητες. Αυτό συμβαίνει μόνο όταν μπορούμε να έχουμε την πληροφορία για το Y χωρίς κάποιο επιπλέον κόστος. 
+\indent Είναι γνωστό από την θεωρία Θεώρημα 2.6.5 του βιβλίου \cite{cover} ότι αν έχουμε δύο τυχαίες μεταβλητές Χ,Υ τότε η πληροφορία που μα δίνει η Υ μπορεί μόνο να μειώσει την εντροπία της Χ, ισχύει δηλαδή πως $ H(X|Y=y_i) \leq H(X)$ με την ισότητα να ισχύει μόνο όταν Χ,Υ είναι ανεξάρτητες. Αυτό συμβαίνει μόνο όταν μπορούμε να έχουμε την πληροφορία για το Y χωρίς κάποιο επιπλέον κόστος.
 
 \indent Για να δοκιμαστεί αυτό το θεώρημα έγιναν τα παρακάτω βήματα. Παράχθηκε το κάθε training set με την μορφή καρέ τρέχοντας τον decoder με ResidualsMode=2. Για το συγκεκριμένο πείραμα αυτή η επιπλέον πληροφορία που δίνετε από την Υ είναι ο μέσος όρος της ενέργειας των ήδη κβαντισμένων block όπως φαίνεται στο Σχήμα~\ref{fig:averenergy}. Τα $y_i$ είναι περιοχές ενέργειας όπως φαίνεται στο Σχήμα~\ref{fig:cat}, παράχθηκαν ταξινομώντας με βάση την πιθανότητα τους τα clusters των codebooks και χωρίζοντας την ενέργεια σε οχτώ περιοχές με συνολικά ίση πιθανότητα. Ξεκινώντας από πάνω αριστερά κβαντοποιούνται τα block και κρατιούνται στατιστικά για το ποια είναι η κατηγορία του τρέχοντος block με βάση την ενέργεια τον γειτόνων του. Έτσι δημιουργούνται οχτώ νέες κατανομές πιθανότητας μεγέθους 65536, καθεμία μια από αυτές έχει δικιά της πιθανότητα.
 
@@ -107,10 +107,10 @@
  \begin{figure}[h]
 \centering
 \begin{tabular}{c c}
-    \includegraphics[height=5.0cm]{chapter4/IntraY.jpg}
-    \includegraphics[height=5.0cm]{chapter4/IntraUV.jpg}\\
-    \includegraphics[height=5.0cm]{chapter4/InterY.jpg}
-    \includegraphics[height=5.0cm]{chapter4/InterUV.jpg}
+    \includegraphics[height=6.0cm]{chapter4/IntraY.jpg}
+    \includegraphics[height=6.0cm]{chapter4/IntraUV.jpg}\\
+    \includegraphics[height=6.0cm]{chapter4/InterY.jpg}
+    \includegraphics[height=6.0cm]{chapter4/InterUV.jpg}
 \end{tabular}
 \caption{Οι κόκκινες γραμμές δείχνουν το σημείο που σταματάει μια κατηγορία ενώ οι μπλε το πλήθος των vectors που αντιστοιχούν στο cluster}
 \label{fig:cat}
@@ -121,10 +121,10 @@
         \begin{tabular}{| l | l | l | l | l | l | l | l |}
         \hline
         Τύπος    & Εντροπία \\ \hline
-        IntraY   & 0.5      \\ \hline
-        IntraUV  & 0.5      \\ \hline
-        InterY   & 0.5      \\ \hline
-        InterUV  & 0.5      \\ \hline
+        IntraY   & 0.5411   \\ \hline
+        IntraUV  & 0.6434   \\ \hline
+        InterY   & 0.5443   \\ \hline
+        InterUV  & 0.6314   \\ \hline
         \hline
         \end{tabular}
     \end{center}

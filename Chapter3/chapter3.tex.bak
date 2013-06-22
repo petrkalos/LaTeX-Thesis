@@ -78,37 +78,67 @@ $x_i = \begin{bmatrix}
 
 \newpage
 
-\indent Στο Βήμα ~\ref{alg:kmeans:s1} του Αλγορίθμου~\ref{alg:kmeans} γίνεται η αρχικοποίηση είτε με τυχαίο τρόπο (κάθε cluster να παίρνει τιμές από ένα τυχαίο point) είτε με κάποια στρατηγική. Στην παρούσα διπλωματική επιλέχθηκε η στρατηγική KKZ (Katsavounidis Kuo Zhang) η οποία έχει μεγαλύτερη πολυπλοκότητα από την τυχαία αλλά οδηγεί τον kmeans σε μικρότερο σφάλμα. Ο αλγόριθμος παραλληλοποιήθηκε με OpenMP και επιτεύχθηκε γραμμική επιτάχυνση. Στο Σχήμα~\ref{fig:kkzspeed} παρατίθεται η επιτάχυνση του παράλληλου αλγορίθμου και στο Σχήμα~\ref{fig:kkziter} οι συνολικές επαναλήψεις που κάνει ο kmeans με τυχαία και KKZ αρχικοποίηση.
+\indent Στο Βήμα ~\ref{alg:kmeans:s1} του Αλγορίθμου~\ref{alg:kmeans} γίνεται η αρχικοποίηση είτε με τυχαίο τρόπο
+(κάθε cluster να παίρνει τιμές από ένα τυχαίο point) είτε με κάποια στρατηγική. Στην παρούσα διπλωματική επιλέχθηκε
+η στρατηγική KKZ (Katsavounidis Kuo Zhang) \cite{KKZ} η οποία έχει μεγαλύτερη πολυπλοκότητα από την τυχαία αλλά οδηγεί τον kmeans
+σε μικρότερο σφάλμα. Ο αλγόριθμος παραλληλοποιήθηκε με OpenMP και επιτεύχθηκαν οι επιδόσεις του Πίνακα~\ref{table:kkzspeed}.
+Στον Πίνακα~\ref{table:kkziter} φαίνεται η συμπεριφορά του kmeans με τυχαία και KKZ αρχικοποίηση και παρατηρείτε η κυριαρχία
+του KKZ όσο αναφορά το σφάλμα.
 
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.5\textwidth]{chapter3/kmeans.jpg}
-  \caption{kmeans με $k=2,d=2,n=100,MSE=284.671$}
-  \label{fig:kkzspeed}
-\end{figure}
+\begin{table}[h!]
+    \begin{center}
+        \begin{tabular}{| l | l | l | l | l |}
+        \hline
+        Αρχικοποίηση   & 1     & 2      & 4     & 6    \\ \hline
+        KKZ     & 90.5 & 63.7   & 42.9  & 36.7  \\ \hline
+        Random  & 0.01  & 0.005  & 0.003 & 0.003    \\ \hline
+        \hline
+        \end{tabular}
+    \end{center}
+    \caption{Διάρκεια αρχικοποίησης (seconds) για KKZ,Random με 1,2,4,6 threads.}
+    \label{table:kkzspeed}
+\end{table}
 
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.5\textwidth]{chapter3/kmeans.jpg}
-  \caption{kmeans με $k=2,d=2,n=100,MSE=284.671$}
-  \label{fig:kkziter}
-\end{figure}
+\begin{table}[h!]
+    \begin{center}
+        \begin{tabular}{| l | l | l | l | l | l | l | l |}
+        \hline
+        Τύπος    & d  & Πλήθος & k     & KKZ 5  & Random 5 & KKZ/Iter   & Random/Iter   \\ \hline
+        IntraY   & 16 & 100000 & 65536 & 0.437  & 2.710    &  0.434/29  & 2.709/9                 \\ \hline
+        IntraUV  & 16 & 100000 & 65536 & 0.182  & 0.945    &  0.181/33  & 0.944/7                 \\ \hline
+        InterY   & 16 & 100000 & 65536 & 0.168  & 1.095    &  0.167/32  & 1.094/10                \\ \hline
+        InterUV  & 16 & 100000 & 65536 & 0.071  & 0.464    &  0.071/27  & 0.463/7                 \\ \hline
+        \hline
+        \end{tabular}
+    \end{center}
+    \caption{Συμπεριφορά του kmeans για Random,KKZ αρχικοποίηση με $k=65536,d=16,n=100000$
+    . Φαίνονται το MSE στην επανάληψη 5 και στο σημείο τερματισμού.}
+    \label{table:kkziter}
+\end{table}
 
-\indent Η πιο σημαντική βελτιστοποίηση επιτεύχθηκε στο σημείο της αναζήτησης του κοντινότερου cluster στο Βήμα~\ref{alg:kmeans:s5} του Αλγορίθμου~\ref{alg:kmeans}. Στην απλή εκδοχή του αλγορίθμου για κάθε data point σαρώνονται όλα τα clusters για να βρεθεί το κοντινότερο. Στην παρούσα διπλωματική, χρησιμοποιήθηκε ο αλγόριθμος Fast Nearest Neighbour ο οποίος οργανώνει τις αποστάσεις σε ένα δυαδικό δέντρο. Ο FastNN μας επιτρέπει να κάνουμε $ log_{2} k $  αναζητήσεις (πολυπλοκότητα αναζήτησης σε δυαδικό δέντρο), διαφορετικά θα έπρεπε να γίνουν k αναζητήσεις. Αυτό οδηγεί σε μεγάλη επιτάχυνση του προβλήματος της αναζήτησης που είναι το κύριο σημείο συμφόρησης του αλγορίθμου. Σε συνδυασμό με την παραλληλοποίηση στο Βήμα~\ref{alg:kmeans:s4} με OpenMP μας επέτρεψε να τρέχουμε μεγάλα πειράματα σε εύλογο χρονικό διάστημα. Οι επιταχύνσεις που επιτεύχθηκαν με την χρήση του FastNN παρουσιάζονται στο Σχήμα~\ref{fig:fastnn} και της παραλληλοποίησης του Βήματος 4 στο Σχήμα~\ref{fig:ompiter}
+\indent Η πιο σημαντική βελτιστοποίηση επιτεύχθηκε στο σημείο της αναζήτησης του κοντινότερου cluster στο
+Βήμα~\ref{alg:kmeans:s5} του Αλγορίθμου~\ref{alg:kmeans}. Στην απλή εκδοχή του αλγορίθμου για κάθε data point
+σαρώνονται όλα τα clusters για να βρεθεί το κοντινότερο. Στην παρούσα διπλωματική, χρησιμοποιήθηκε ο αλγόριθμος
+Fast Nearest Neighbour ο οποίος οργανώνει τις αποστάσεις σε ένα δυαδικό δέντρο. Ο FastNN μας επιτρέπει να κάνουμε
+$ log_{2} k $  αναζητήσεις (πολυπλοκότητα αναζήτησης σε δυαδικό δέντρο), διαφορετικά θα έπρεπε να γίνουν k αναζητήσεις.
+Αυτό οδηγεί σε μεγάλη επιτάχυνση του προβλήματος της αναζήτησης που είναι το κύριο σημείο συμφόρησης του αλγορίθμου. Σε
+συνδυασμό με την παραλληλοποίηση στο Βήμα~\ref{alg:kmeans:s4} με OpenMP μας επέτρεψε να τρέχουμε μεγάλα πειράματα σε
+εύλογο χρονικό διάστημα. Οι επιταχύνσεις που επιτεύχθηκαν με την χρήση του FastNN και της OpenMP παρουσιάζονται
+στον Πίνακα~\ref{table:fastnn}.
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.5\textwidth]{chapter3/kmeans.jpg}
-  \caption{kmeans με $k=2,d=2,n=100,MSE=284.671$}
-  \label{fig:fastnn}
-\end{figure}
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.5\textwidth]{chapter3/kmeans.jpg}
-  \caption{kmeans με $k=2,d=2,n=100,MSE=284.671$}
-  \label{fig:ompiter}
-\end{figure}
+\begin{table}[h!]
+    \begin{center}
+        \begin{tabular}{| l | l | l | l | l |}
+        \hline
+        Αναζήτηση   & 1     & 2      & 4     & 6    \\ \hline
+        FastNN  & 9.7   & 6.1    & 4.4   & 3.2  \\ \hline
+        Simple  & 61.4  & 31.2   & 16.6  & 12.3    \\ \hline
+        \hline
+        \end{tabular}
+    \end{center}
+    \caption{Διάρκεια μίας επανάληψης (seconds) για Simple,FastNN με 1,2,4,6 threads με $k=65536,d=16,n=100000$}
+    \label{table:fastnn}
+\end{table}
 
 \newpage
 

@@ -7,13 +7,13 @@
 \usepackage{acronym}
 \usepackage{listings}
 \usepackage{amsfonts}
-\usepackage{gr-acrnm}
 \usepackage{a4wide}
 \usepackage{amsmath}
 \usepackage{siunitx}
 \usepackage{alltt}
 \usepackage{latexsym}
 \usepackage{float}
+\usepackage{url}
 
 \setmainfont[Mapping=tex-text]{GFS Artemisia}
 
@@ -60,46 +60,46 @@
 \frontmatter
 
 %Include the dedication page
-%\include{Dedication/dedication}
+\include{Dedication/dedication}
 
 %Include the page for the acknowledgements
-%\include{Acknowledgements/acknowledgements}
+\include{Acknowledgements/acknowledgements}
 
 %\tableofcontents*
-%\newpage
-%\listoftables
-%\newpage
-%\listoffigures
-%\newpage
+\newpage
+\listoftables
+\newpage
+\listoffigures
+\newpage
 %\include{Acronyms/acronyms}
 %Include the greek abstract for the thesis
-%\include{Abstract/abstract}
+\include{Abstract/abstract}
 %Include the english abstract for the thesis
-%\include{Abstract/abstracten}
+\include{Abstract/abstracten}
 
 
 \mainmatter
 \pagestyle{Ruled}
 
-%\include{Chapter1/chapter1}
+\include{Chapter1/chapter1}
 
-%\include{Chapter2/chapter2}
+\include{Chapter2/chapter2}
 
-%\include{Chapter3/chapter3}
+\include{Chapter3/chapter3}
 
-%\include{Chapter4/chapter4}
+\include{Chapter4/chapter4}
 
-%\include{Chapter5/chapter5}
+\include{Chapter5/chapter5}
 
 \include{Chapter6/chapter6}
 
-%\include{Chapter7/chapter7}
+\include{Chapter7/chapter7}
 
-%\backmatter
+\backmatter
 
-%\cleardoublepage
-%\bibliographystyle{plain}
-%\bibliography{Bibliography/ThesisBibliography}
+\cleardoublepage
+\bibliographystyle{plain}
+\bibliography{Bibliography/ThesisBibliography}
 \nocite{*}
 
 \end{document} 
