@@ -17,9 +17,9 @@
 
 \indent Το επόμενο που έγινε είναι να αποθηκεύονται τα τελικά $VQ_{indices}$ σε ένα αρχείο. Όπως αναφέρθηκε για κάθε macroblock ο H.264 encoder δοκιμάζει όλα τα επιτρεπόμενα modes μέχρι να βρεθεί το καλύτερο, αυτό σημαίνει πως η συνάρτηση sample\_reconstruction θα κλιθεί όσες φόρες είναι και το πλήθος των επιτρεπόμενων modes ανά block. Επομένως χρειάζεται να κρατώνται τα προσωρινά $VQ_{indices}$ που γράφει o Αλγόριθμος~\ref{alg:quantmb} και κάθε φόρα που βρίσκεται ότι ένα mode είναι καλύτερο από το προηγούμενο να αντιγράφονται σε ένα global πίνακα που κρατάει τα καλύτερα VQ indices για κάθε macroblock.
 
-\indent Αφού τελειώσει η διαδικασία αυτή για κάθε macroblock  τα $VQ_{indices}$ γράφονται σε ένα αρχείο. Στην παρούσα διπλωματική, τα $VQ_{indices}$ που γράφονται για κάθε Υ macroblock είναι $\frac{16*16}{4*4}=16$ όπου 16*16 η διάσταση του macroblock και $4*4=16$ η διάσταση του codebook. Επομένως γράφονται $2*16 = 32bytes$ ανά macroblock, το 2 bytes προκύπτει επειδή τα $VQ_{indices}\in[0,65535]$.
+\indent Αφού τελειώσει η διαδικασία αυτή για κάθε macroblock  τα $VQ_{indices}$ γράφονται σε ένα αρχείο. Στην παρούσα διπλωματική, τα $VQ_{indices}$ που γράφονται για κάθε Υ macroblock είναι $\frac{16*16}{4*4}=16$ όπου 16*16 η διάσταση του macroblock και $4*4=16$ η διάσταση του codebook. Επομένως γράφονται $2*16 = 32bytes$ ανά macroblock για το Υ και $2*8$ για το UV, το 2 bytes προκύπτει επειδή τα $VQ_{indices}\in[0,65535]$. Οι αλλαγές φαίνονται στο Σχήμα~\ref{fig:vqencoder}.
 
-\begin{algorithm}[h]
+\begin{algorithm}[H]
 \begin{algorithmic}[1]
 \Function{quantize\_mb}{residuals,width,height,x,y,plane,mode}
 \State{Load codebook for mode(Intra,Inter) and plane(Y,UV);}
@@ -30,9 +30,17 @@
 \EndFor
 \EndFunction
 \end{algorithmic}
-\caption{Block VQ Algorithm}
+\caption{VQ Algorithm}
 \label{alg:quantmb}
 \end{algorithm}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{chapter5/vqencoder.jpg}
+  \caption{VQ H.264 Encoder Structure}
+  \label{fig:vqencoder}
+\end{figure}
+
 
 \indent Για να παραμετροποιείται o JM Η.264 encoder προστέθηκαν οι παρακάτω επιλογές στο configuration file.
 
@@ -49,9 +57,17 @@
 \section{Decoding}
 \label{section:sect53}
 
-\indent Στον decoder όπως είναι αναμενόμενο τα πράγματα είναι πιο απλά. Αφού επιτραπεί στον decoder να κάνει την διαδικασία αντίστροφης κβαντοποίησης και μετασχηματισμού, στο ίδιο ακριβώς σημείο με τον encoder παρεμβάλλεται ο Αλγόριθμος~\ref{alg:iquantmb}. Η συνάρτηση αυτή αντιστοιχίζει 16 $VQ_{indices}$ που διαβάζει από το αρχείο για κάθε ένα από τα 16 subblocks του macroblock με 16 $VQ_{vectors}$ κατά τον Αλγόριθμος~\ref{alg:iquantmb}. Τελικά ο decoder παίρνει την κύρια πληροφορία που είναι τα residuals από τα $VQ_{indices}$ και τα headers, motion vectors από το αρχείο .264.
+\indent Στον decoder όπως είναι αναμενόμενο τα πράγματα είναι πιο απλά. Αφού επιτραπεί στον decoder να κάνει την διαδικασία αντίστροφης κβαντοποίησης και μετασχηματισμού, στο ίδιο ακριβώς σημείο με τον encoder παρεμβάλλεται ο Αλγόριθμος~\ref{alg:iquantmb}. Η συνάρτηση αυτή αντιστοιχίζει 16 $VQ_{indices}$ που διαβάζει από το αρχείο για κάθε ένα από τα 16 subblocks του macroblock με 16 $VQ_{vectors}$ για τα Y macroblocks,ακόμα 4 για το 8x8 macroblock του U και αντιστοίχος για το V κατά τον Αλγόριθμο~\ref{alg:iquantmb}. Τελικά ο decoder παίρνει την κύρια πληροφορία που είναι τα residuals από τα $VQ_{indices}$ ενώ τα headers, motion vectors από το αρχείο .264. Οι αλλαγές φαίνονται στο Σχήμα~\ref{fig:vqdecoder}.
 
-\begin{algorithm}[h]
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{chapter5/vqdecoder.jpg}
+  \caption{VQ H.264 Decoder Structure}
+  \label{fig:vqdecoder}
+\end{figure}
+
+\begin{algorithm}[H]
 \begin{algorithmic}[1]
 \Function{quantize\_mb}{residuals,width,height,x,y,plane,mode}
 \State{Load codebook for mode(Intra,Inter) and plane(Y,UV);}
@@ -61,7 +77,7 @@
 \EndFor
 \EndFunction
 \end{algorithmic}
-\caption{Block inverse VQ Algorithm}
+\caption{Inverse VQ Algorithm}
 \label{alg:iquantmb}
 \end{algorithm}
 
